@@ -1,0 +1,12 @@
+[
+    {"id": 1, "text": "Bugün harika şeyler başaracağım.", "category": "positive"},
+    {"id": 2, "text": "Ben değerli ve sevilen bir insanım.", "category": "positive"},
+    {"id": 3, "text": "Her zorluk bir öğrenme fırsatıdır.", "category": "growth"},
+    {"id": 4, "text": "Kendime güveniyorum ve kararlarıma inanıyorum.", "category": "confidence"},
+    {"id": 5, "text": "Derin bir nefes alıyorum ve rahatlıyorum.", "category": "calm"},
+    {"id": 6, "text": "Zihnim sakin, ruhum huzurlu.", "category": "calm"},
+    {"id": 7, "text": "Her gün daha iyiye gidiyorum.", "category": "growth"},
+    {"id": 8, "text": "Hayatım sevgi ve neşe ile dolu.", "category": "positive"},
+    {"id": 9, "text": "Gücümü içimde buluyorum.", "category": "confidence"},
+    {"id": 10, "text": "Her anın kıymetini biliyorum.", "category": "mindfulness"}
+]

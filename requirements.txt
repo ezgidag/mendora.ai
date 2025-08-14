@@ -1,0 +1,6 @@
+streamlit
+google-generativeai
+librosa
+pydub
+streamlit-webrtc
+cryptography
