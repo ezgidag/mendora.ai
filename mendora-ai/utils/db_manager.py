@@ -1,14 +1,23 @@
 import sqlite3
 import json
 from datetime import datetime
+import tempfile
+import os
 
 class DatabaseManager:
-    def __init__(self, db_path="data/app.db"):
+    def __init__(self, db_path=None):
         self.db_path = db_path
         self.conn = None
 
     def get_connection(self):
         if self.conn is None:
+            if self.db_path is None:
+                # Use a temporary file for the database if no path is provided
+                # This is useful for environments like Streamlit Cloud where 
+                # standard paths might not be writable.
+                # The database will be in-memory or a temporary file that resets
+                # with each new app session/restart.
+                self.db_path = os.path.join(tempfile.gettempdir(), "app.db")
             self.conn = sqlite3.connect(self.db_path)
         return self.conn
     
