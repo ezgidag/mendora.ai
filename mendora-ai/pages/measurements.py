@@ -15,10 +15,10 @@ def show_measurements_page():
     if entries:
         df = pd.DataFrame(entries, columns=[
             'entry_date', 'entry_text', 'detected_keywords', 'keyword_category',
-            'ai_emotion', 'ai_intensity', 'ai_themes', 'ai_recommendation'
+            'ai_emotion', 'ai_intensity', 'ai_themes', 'ai_recommendation', 'created_at'
         ])
-        df['entry_date'] = pd.to_datetime(df['entry_date'])
-        df = df.sort_values(by='entry_date')
+        df['created_at'] = pd.to_datetime(df['created_at'])
+        df = df.sort_values(by='created_at')
 
         # Ensure 'ai_intensity' is numeric, handling potential errors
         df['ai_intensity'] = pd.to_numeric(df['ai_intensity'], errors='coerce').fillna(0)
@@ -28,12 +28,12 @@ def show_measurements_page():
         st.write(df)
 
         st.subheader("Emotion Intensity Over Time")
-        fig = px.line(df, x='entry_date', y='ai_intensity', title='AI Emotion Intensity')
+        fig = px.line(df, x='created_at', y='ai_intensity', title='AI Emotion Intensity')
         st.plotly_chart(fig, use_container_width=True)
 
         st.subheader("All Journal Entries")
         for index, row in df.iterrows():
-            st.markdown(f"**Date: {row['entry_date'].strftime('%Y-%m-%d')}**")
+            st.markdown(f"**Date: {row['entry_date'].strftime('%Y-%m-%d')} (Time: {row['created_at'].strftime('%H:%M:%S')})**")
             st.write(f"Entry: {row['entry_text']}")
             st.write(f"Keyword Analysis: {row['keyword_category']} (Keywords: {row['detected_keywords']})")
             st.write(f"AI Emotion: {row['ai_emotion']} (Intensity: {row['ai_intensity']}/10)")

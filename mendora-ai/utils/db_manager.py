@@ -104,7 +104,7 @@ class DatabaseManager:
         
         cursor.execute('''
             SELECT entry_date, entry_text, detected_keywords, keyword_category, 
-                   ai_emotion, ai_intensity, ai_themes, ai_recommendation
+                   ai_emotion, ai_intensity, ai_themes, ai_recommendation, created_at
             FROM journal_entries
             WHERE user_id = ?
             ORDER BY entry_date ASC
