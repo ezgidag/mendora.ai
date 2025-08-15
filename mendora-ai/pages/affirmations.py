@@ -4,6 +4,7 @@ import json
 from datetime import date
 import random
 from utils.db_manager import DatabaseManager
+import os # Added for path manipulation
 
 def show_affirmations_page():
     st.header("✨ Daily Affirmations")
@@ -11,12 +12,15 @@ def show_affirmations_page():
     db = DatabaseManager()
     user_id = st.session_state.user_id
 
+    # Construct the path to affirmations.json robustly
+    affirmations_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "affirmations.json")
+
     # Load affirmations from JSON file
     try:
-        with open("data/affirmations.json", "r", encoding="utf-8") as f:
+        with open(affirmations_file_path, "r", encoding="utf-8") as f:
             affirmations = json.load(f)
     except FileNotFoundError:
-        st.error("Affirmations data file not found.")
+        st.error(f"Affirmations data file not found at: {affirmations_file_path}") # Added path to error
         return
 
     today = date.today()
