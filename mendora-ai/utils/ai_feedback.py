@@ -23,7 +23,7 @@ class AIFeedback:
         """
         
         try:
-            response = self.model.generate_content(prompt)
+            response = self.model.generate_content(prompt, timeout=60) # Add timeout in seconds
             response_text = response.text
             
             # Debugging: Print raw response text to logs
