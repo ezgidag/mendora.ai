@@ -17,7 +17,10 @@ def show_measurements_page():
             'entry_date', 'entry_text', 'detected_keywords', 'keyword_category',
             'ai_emotion', 'ai_intensity', 'ai_themes', 'ai_recommendation', 'created_at'
         ])
+        # Convert both 'created_at' and 'entry_date' to datetime
         df['created_at'] = pd.to_datetime(df['created_at'])
+        df['entry_date'] = pd.to_datetime(df['entry_date']) # Add this line
+
         # Ensure 'ai_intensity' is numeric, handling potential errors
         df['ai_intensity'] = pd.to_numeric(df['ai_intensity'], errors='coerce').fillna(0)
         
