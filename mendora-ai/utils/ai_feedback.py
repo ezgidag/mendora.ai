@@ -24,11 +24,18 @@ class AIFeedback:
         
         try:
             response = self.model.generate_content(prompt, timeout=60) # Add timeout in seconds
+            
+            # Debugging: Print entire response object to logs
+            print(f"Raw Gemini API response object: {response}")
+
             response_text = response.text
             
             # Debugging: Print raw response text to logs
-            print(f"Raw Gemini API response: {response_text}")
+            print(f"Raw Gemini API response text: {response_text}")
             
+            if not response_text or not response_text.strip():
+                raise ValueError("Empty or invalid response from Gemini API.")
+
             # Attempt to parse JSON response
             try:
                 response_json = json.loads(response_text)
