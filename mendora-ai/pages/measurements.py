@@ -18,27 +18,25 @@ def show_measurements_page():
             'ai_emotion', 'ai_intensity', 'ai_themes', 'ai_recommendation', 'created_at'
         ])
         df['created_at'] = pd.to_datetime(df['created_at'])
-        df = df.sort_values(by='created_at')
-
         # Ensure 'ai_intensity' is numeric, handling potential errors
         df['ai_intensity'] = pd.to_numeric(df['ai_intensity'], errors='coerce').fillna(0)
+        
+        # Prepare data for display table
+        df['Date & Time'] = df['created_at'].dt.strftime('%Y-%m-%d %H:%M:%S')
+        df['Journal Entry'] = df['entry_text']
+        df['AI Analysis Result'] = df.apply(lambda row: 
+            f"Emotion: {row['ai_emotion']} (Intensity: {row['ai_intensity']}/10)\nSuggestion: {row['ai_recommendation']}", 
+            axis=1
+        )
 
-        # Debugging: Display the DataFrame
-        st.write("Debug: DataFrame content for Emotion Intensity")
-        st.write(df)
-
+        # Display AI Emotion Intensity graph (using created_at for full timestamp)
         st.subheader("Emotion Intensity Over Time")
         fig = px.line(df, x='created_at', y='ai_intensity', title='AI Emotion Intensity')
         st.plotly_chart(fig, use_container_width=True)
 
+        # Display all journal entries in a clean table
         st.subheader("All Journal Entries")
-        for index, row in df.iterrows():
-            st.markdown(f"**Date: {row['entry_date'].strftime('%Y-%m-%d')} (Time: {row['created_at'].strftime('%H:%M:%S')})**")
-            st.write(f"Entry: {row['entry_text']}")
-            st.write(f"Keyword Analysis: {row['keyword_category']} (Keywords: {row['detected_keywords']})")
-            st.write(f"AI Emotion: {row['ai_emotion']} (Intensity: {row['ai_intensity']}/10)")
-            st.info(f"AI Recommendation: {row['ai_recommendation']}")
-            st.markdown("--- unskilled")
+        st.dataframe(df[['Date & Time', 'Journal Entry', 'AI Analysis Result']], use_container_width=True)
 
     else:
         st.info("No journal entries yet. Start by writing in your journal!")
