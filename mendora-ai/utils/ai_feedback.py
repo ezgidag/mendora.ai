@@ -23,7 +23,7 @@ class AIFeedback:
         """
         
         try:
-            response = self.model.generate_content(prompt, timeout=60) # Add timeout in seconds
+            response = self.model.generate_content(prompt) # Removed timeout argument
             
             # Debugging: Print entire response object to logs
             print(f"Raw Gemini API response object: {response}")
