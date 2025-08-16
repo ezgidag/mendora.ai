@@ -21,7 +21,11 @@ def show_journal_page():
             keyword_result = keyword_analyzer.analyze_text(user_text)
             
             # AI analysis
-            ai_result = ai_feedback.analyze_emotion(user_text)
+            try:
+                ai_result = ai_feedback.analyze_emotion(user_text)
+            except Exception as e:
+                st.error(f"AI Analysis failed. Please try again later. Error: {e}")
+                return # Stop execution if AI analysis fails
             
             # Display results
             col1, col2 = st.columns(2)
