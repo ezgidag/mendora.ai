@@ -33,14 +33,22 @@ class AIFeedback:
             # Debugging: Print raw response text to logs
             print(f"Raw Gemini API response text: {response_text}")
             
+            # Clean up response text by removing markdown code block if present
+            if response_text.startswith('```json') and response_text.endswith('```'):
+                response_text = response_text.lstrip('```json').rstrip('```').strip()
+                if response_text.startswith('\n'): # Remove leading newline if present after lstrip
+                    response_text = response_text[1:]
+                if response_text.endswith('\n'): # Remove trailing newline if present before rstrip
+                    response_text = response_text[:-1]
+
             if not response_text or not response_text.strip():
-                raise ValueError("Empty or invalid response from Gemini API.")
+                raise ValueError("Empty or invalid response from Gemini API after cleanup.")
 
             # Attempt to parse JSON response
             try:
                 response_json = json.loads(response_text)
             except json.JSONDecodeError as e:
-                print(f"JSON Decode Error: {e} - Response Text: {response_text}")
+                print(f"JSON Decode Error (after cleanup): {e} - Cleaned Response Text: {response_text}")
                 raise ValueError(f"Invalid JSON response from AI: {e}")
 
             # Debugging: Print parsed JSON to logs
