@@ -33,22 +33,25 @@ class AIFeedback:
             # Debugging: Print raw response text to logs
             print(f"Raw Gemini API response text: {response_text}")
             
-            # Clean up response text by removing markdown code block if present
-            if response_text.startswith('```json') and response_text.endswith('```'):
-                response_text = response_text.lstrip('```json').rstrip('```').strip()
-                if response_text.startswith('\n'): # Remove leading newline if present after lstrip
-                    response_text = response_text[1:]
-                if response_text.endswith('\n'): # Remove trailing newline if present before rstrip
-                    response_text = response_text[:-1]
+            # Attempt to extract JSON string from the response text robustly
+            json_start = response_text.find('{')
+            json_end = response_text.rfind('}')
 
-            if not response_text or not response_text.strip():
+            if json_start != -1 and json_end != -1 and json_end > json_start:
+                clean_response_text = response_text[json_start : json_end + 1]
+            else:
+                # If no valid JSON structure found, raise an error or handle accordingly
+                print(f"No valid JSON structure found in response: {response_text}")
+                raise ValueError("No valid JSON structure found in AI response.")
+
+            if not clean_response_text or not clean_response_text.strip():
                 raise ValueError("Empty or invalid response from Gemini API after cleanup.")
 
             # Attempt to parse JSON response
             try:
-                response_json = json.loads(response_text)
+                response_json = json.loads(clean_response_text)
             except json.JSONDecodeError as e:
-                print(f"JSON Decode Error (after cleanup): {e} - Cleaned Response Text: {response_text}")
+                print(f"JSON Decode Error (after robust cleanup): {e} - Cleaned Response Text: {clean_response_text}")
                 raise ValueError(f"Invalid JSON response from AI: {e}")
 
             # Debugging: Print parsed JSON to logs

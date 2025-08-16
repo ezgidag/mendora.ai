@@ -21,22 +21,27 @@ def show_measurements_page():
         # Ensure 'ai_intensity' is numeric, handling potential errors
         df['ai_intensity'] = pd.to_numeric(df['ai_intensity'], errors='coerce').fillna(0)
         
+        # Aggregate daily average intensity for the graph
+        daily_avg_intensity = df.groupby(df['created_at'].dt.date)['ai_intensity'].mean().reset_index()
+        daily_avg_intensity.columns = ['Date', 'Average Intensity']
+        daily_avg_intensity['Date'] = pd.to_datetime(daily_avg_intensity['Date'])
+
         # Prepare data for display table
-        df['Date & Time'] = df['created_at'].dt.strftime('%Y-%m-%d %H:%M:%S')
+        df['Date'] = df['entry_date'].dt.strftime('%Y-%m-%d') # Use entry_date for consistency as per request
         df['Journal Entry'] = df['entry_text']
         df['AI Analysis Result'] = df.apply(lambda row: 
             f"Emotion: {row['ai_emotion']} (Intensity: {row['ai_intensity']}/10)\nSuggestion: {row['ai_recommendation']}", 
             axis=1
         )
 
-        # Display AI Emotion Intensity graph (using created_at for full timestamp)
-        st.subheader("Emotion Intensity Over Time")
-        fig = px.line(df, x='created_at', y='ai_intensity', title='AI Emotion Intensity')
+        # Display AI Emotion Intensity graph (showing daily average)
+        st.subheader("Daily Average Emotion Intensity Over Time")
+        fig = px.line(daily_avg_intensity, x='Date', y='Average Intensity', title='Daily Average AI Emotion Intensity')
         st.plotly_chart(fig, use_container_width=True)
 
         # Display all journal entries in a clean table
         st.subheader("All Journal Entries")
-        st.dataframe(df[['Date & Time', 'Journal Entry', 'AI Analysis Result']], use_container_width=True)
+        st.dataframe(df[['Date', 'Journal Entry', 'AI Analysis Result']], use_container_width=True)
 
     else:
         st.info("No journal entries yet. Start by writing in your journal!")
