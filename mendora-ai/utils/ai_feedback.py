@@ -26,12 +26,18 @@ class AIFeedback:
             response = self.model.generate_content(prompt)
             response_text = response.text
             
+            # Debugging: Print raw response text to logs
+            print(f"Raw Gemini API response: {response_text}")
+            
             # Attempt to parse JSON response
             try:
                 response_json = json.loads(response_text)
             except json.JSONDecodeError as e:
                 print(f"JSON Decode Error: {e} - Response Text: {response_text}")
                 raise ValueError(f"Invalid JSON response from AI: {e}")
+
+            # Debugging: Print parsed JSON to logs
+            print(f"Parsed Gemini API JSON: {response_json}")
 
             # Ensure intensity is an integer
             if 'intensity' in response_json:
