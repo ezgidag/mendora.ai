@@ -61,4 +61,10 @@ class AIFeedback:
             return response_json
         except Exception as e:
             print(f"General AI Feedback Error: {e}") # Log general errors
-            raise # Re-raise to be caught by journal.py
+            return {
+                "primary_emotion": "neutral",
+                "intensity": 0, # Default to 0 for intensity on error
+                "themes": [],
+                "suggestion": "AI analysis failed. Please try again later.",
+                "error": str(e) # Pass the error message
+            }
